@@ -1,0 +1,72 @@
+##########################################3
+PageManager:
+    
+    SelectionPage:
+    CourseCatalogPage:
+
+<SelectionPage>:
+    
+    #radius: [25, 0, 0, 0]
+    #md_bg_color: app.theme_cls.primary_color
+    name: 'selectionpage'
+
+    d1:d1
+    p1:p1
+    MDBoxLayout:
+        #label:label
+        orientation:'vertical'
+        size: root.width,root.height
+        #md_bg_color: app.theme_cls.primary_color
+        MDLabel:
+            id:d1
+            text:'Computer Science'
+            halign: "center"
+        
+        MDLabel:
+            id:p1
+            text:'Master in Computer Science'
+            halign: "center"
+           
+        MDRectangleFlatButton:
+            text: "Show Course Catalog"
+            text_color: 0, 0, 1, 1
+            md_bg_color: 1, 1, 0, 1
+            font_size: "18sp"
+            pos_hint:{"center_x": .5, "center_y": .2}
+            on_press:
+                root.viewcoursecatalog()
+                app.root.current = "catalogpage"
+                root.manager.transition.direction ="left"
+
+<Content>:
+    adaptive_height: True
+
+<CourseCatalogPage>:
+    name:'catalogpage'
+    displaycatalog:displaycatalog
+    MDBoxLayout:
+        #label:label
+        orientation:'vertical'
+        size: root.width,root.height
+        #md_bg_color: app.theme_cls.primary_color
+
+
+        ScrollView:
+            MDGridLayout:
+                id:displaycatalog
+                cols:1
+                adaptive_height:True
+
+       
+           
+        MDRectangleFlatButton:
+            text: "back to selection"
+            text_color: 0, 0, 1, 1
+            md_bg_color: 1, 1, 0, 1
+            font_size: "18sp"
+            pos_hint:{"center_x": .5, "center_y": .2}
+            on_press:
+                #root.viewcoursecatalog()
+                app.root.current = "selectionpage"
+                root.manager.transition.direction ="left"
+   
