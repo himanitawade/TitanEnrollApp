@@ -6,7 +6,7 @@ import pyodbc as connector
 #connection string with needed information
 """ The server name will be differ for all partners"""
 connection_string=(r"Driver={SQL Server};"
-               r"Server=DELL-JMD7R7JF08\CPSC544NIDHI;" # please change this to your server--> run 'select @@SERVERNAME' in sql studio to find your server
+               r"Server=LTCSUF-J2WS0B3\HIMANITAWADE;" # please change this to your server--> run 'select @@SERVERNAME' in sql studio to find your server
                r"Database=TITANENROLLDB;"
                r"Trusted_Connection=yes;")
 

@@ -1,8 +1,58 @@
 ##########################################3
 PageManager:
     
+    HomePage:
     SelectionPage:
     CourseCatalogPage:
+    
+<HomePage>:
+    name:"homepage"
+    home:home
+    MDCard:
+        size_hint: None, None
+        size: 400, 500
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+        
+    
+    MDLabel:
+        id: home
+        text: "Welcome to CS Course Info and Enrollment App"
+        font_size: 15
+        halign: 'center'
+        size_hint_y: None
+        pos_hint: {"center_x": 0.5, "center_y": 0.7}
+        height: self.texture_size[1]
+        padding_y: 15
+        
+    
+    MDFillRoundFlatIconButton:
+        text: "View Course Catalog"
+        font_size: 12
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        md_bg_color: app.theme_cls.accent_dark
+        icon:'book'
+        on_press:
+            app.root.current = "selectionpage"
+            root.manager.transition.direction ="left"
+        
+        
+    MDFillRoundFlatIconButton:
+        text: "Enrollment"
+        font_size: 12
+        pos_hint: {"center_x": 0.5, "center_y": 0.3}
+        md_bg_color: app.theme_cls.primary_dark
+        icon: 'lock-outline'
+        
+          
+    Image:
+        source:'Images/Logo.png'
+        size_hint_x: 0.2
+        allow_stretch: True
+        pos_hint: {"center_x": 0.1, "center_y": 0.9}
 
 <SelectionPage>:
     
@@ -48,9 +98,6 @@ PageManager:
         #label:label
         orientation:'vertical'
         size: root.width,root.height
-        #md_bg_color: app.theme_cls.primary_color
-
-
         ScrollView:
             MDGridLayout:
                 id:displaycatalog
@@ -58,7 +105,6 @@ PageManager:
                 adaptive_height:True
 
        
-           
         MDRectangleFlatButton:
             text: "back to selection"
             text_color: 0, 0, 1, 1

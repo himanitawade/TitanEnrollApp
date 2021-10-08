@@ -9,6 +9,8 @@ from kivymd.uix.expansionpanel import MDExpansionPanel,MDExpansionPanelTwoLine
 from kivymd.uix.list import TwoLineListItem
 from kivymd.uix.boxlayout import MDBoxLayout
 
+class HomePage(MDScreen):
+    pass
 
 class SelectionPage(MDScreen):
     #make sure the d1 and p1 have values as in the database entry
@@ -33,8 +35,6 @@ class CourseCatalogPage(MDScreen):
 class PageManager(ScreenManager):
     pass
 
-
-
 class TitanEnrolHelper(MDApp):
    
     def __init__(self,**kwargs):
@@ -42,6 +42,10 @@ class TitanEnrolHelper(MDApp):
         self.root= Builder.load_file('pagescreen.kv')
 
     def build(self):
+        self.theme_cls.theme_style = "Dark"
+        self.theme_cls.primary_palette= "Blue"
+        self.theme_cls.accent_palette= "Orange"
+        
        
         return self.root
 
