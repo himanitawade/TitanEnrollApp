@@ -16,6 +16,24 @@ conn= connector.connect(connection_string)
 #create a cursor to work on the database
 cur=conn.cursor()
 
+def getlistofavailablecourses(department,program):
+   # connection_string=(r"Driver={SQL Server};"
+   #             r"Server=DELL-K2QI68SB10\NIDHI544APP;"
+   #             r"Database=TITANENROLLDB;"
+   #             r"Trusted_Connection=yes;")
+
+   # conn= connector.connect(connection_string)
+
+   # cur=conn.cursor()
+   
+  # query will get all available courses
+   cur.execute(f"""SELECT Classes.ClassID,Courses.CourseID,Courses.CoursesName,Professor.firstname+Professor.lastname,Classes.Timeslot,Classes.RemainingSeats FROM Courses 
+                  INNER JOIN Classes 
+                     ON Courses.CourseID = Classes.CourseID 
+					 INNER JOIN Professor
+					 ON Classes.ProfessorID = Professor.ProfessorID""")
+
+   return cur
 
 def getlistofcourses(department,program):
    print('server function call')
