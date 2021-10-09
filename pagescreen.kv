@@ -128,37 +128,64 @@ PageManager:
 
 <SelectionPage>:
     
-    #radius: [25, 0, 0, 0]
-    #md_bg_color: app.theme_cls.primary_color
-    name: 'selectionpage'
-
-    d1:d1
-    p1:p1
-    MDBoxLayout:
-        #label:label
-        orientation:'vertical'
-        size: root.width,root.height
-        #md_bg_color: app.theme_cls.primary_color
-        MDLabel:
-            id:d1
-            text:'Computer Science'
-            halign: "center"
+    name:"selectionpage"
+    spinner_dept:spinner_dept
+    spinner_prog:spinner_prog
+    MDCard:
+        size_hint: None, None
+        size: 400, 500
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
         
-        MDLabel:
-            id:p1
-            text:'Master in Computer Science'
-            halign: "center"
-           
-        MDRectangleFlatButton:
-            text: "Show Course Catalog"
-            text_color: 0, 0, 1, 1
-            md_bg_color: 1, 1, 0, 1
-            font_size: "18sp"
-            pos_hint:{"center_x": .5, "center_y": .2}
-            on_press:
-                root.viewcoursecatalog()
-                app.root.current = "catalogpage"
-                root.manager.transition.direction ="left"
+    
+    MDLabel:
+        id: w1
+        text: "Department and Program Selection"
+        font_size: 15
+        halign: 'center'
+        size_hint_y: None
+        pos_hint: {"center_x": 0.5, "center_y": 0.8}
+        
+        padding_y: 15
+
+
+
+    Spinner:
+        id: spinner_dept
+        text: "Select Department"
+        values:["computer science"]
+        pos_hint: {"center_x": 0.5, "center_y": 0.6}
+        size_hint:(None,None)
+        size: (280, 55)
+        
+        on_text: root.spinner_clicked(spinner_dept.text) 
+        
+    Spinner:
+        id: spinner_prog
+        text: "Select Program"
+        values:["Master","Bachelor"]
+        pos_hint: {"center_x": 0.5, "center_y": 0.4}
+        size_hint:(None,None)
+        size: (280, 55)
+        
+        on_text: root.spinner_clicked_prog(spinner_prog.text)    
+
+
+
+
+    MDFillRoundFlatIconButton:
+        text: "Show Course Catalog"
+        font_size: 12
+        pos_hint: {"center_x": 0.5, "center_y": 0.2}
+        md_bg_color: app.theme_cls.accent_dark
+        icon:'school'
+        on_press:
+            app.root.current = "catalogpage"
+            root.manager.transition.direction ="left"
+            
     MDIconButton:
         pos_hint: {"center_x": 0.9, "center_y": 0.9}
         md_bg_color: app.theme_cls.accent_dark
@@ -221,7 +248,7 @@ PageManager:
                 id:selectedeptandprogram
                 text:"Course Catalog For \n Department: \nProgram:"
                 text_style:'H5'
-                background_color: (1,1,0,0.2)
+                background_color: (0,0,0.3,0.3)
                 canvas.before:
                     Color:
                         rgba: self.background_color
@@ -232,7 +259,7 @@ PageManager:
         # Layout to show the courses
         MDBoxLayout:
             orientation:'vertical'
-            background_color: (1,1,0,0.2)
+            background_color: (0,0,0.3,0.1)
             
             
             #height:root.height/10
@@ -256,13 +283,15 @@ PageManager:
                     padding:'20dp'
 
                                       
-        MDRectangleFlatButton:
+        MDFillRoundFlatIconButton:
             text: "back to selection"
-            text_color: 0, 0, 1, 1
-            md_bg_color: 1, 1, 0, 1
+            md_bg_color: app.theme_cls.accent_dark
             font_size: "18sp"
             pos_hint:{"center_x": .5, "center_y": .2}
+            icon:'school'
             on_press:
                 root.Gobacktoselectionwork()
                 app.root.current = "selectionpage"
                 root.manager.transition.direction ="left"
+
+
