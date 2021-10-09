@@ -2,6 +2,7 @@
 PageManager:
     
     HomePage:
+    LoginPage:
     SelectionPage:
     CourseCatalogPage:
     
@@ -46,6 +47,9 @@ PageManager:
         pos_hint: {"center_x": 0.5, "center_y": 0.3}
         md_bg_color: app.theme_cls.primary_dark
         icon: 'lock-outline'
+        on_press:
+            app.root.current = "loginpage"
+            root.manager.transition.direction ="left"
         
           
     Image:
@@ -53,6 +57,74 @@ PageManager:
         size_hint_x: 0.2
         allow_stretch: True
         pos_hint: {"center_x": 0.1, "center_y": 0.9}
+        
+<LoginPage>:
+
+    name:"loginpage"
+        
+    MDCard:
+        size_hint: None,None
+        size: 300,420
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+
+    MDLabel:
+        id: CSU_Login
+        text: "CSU Login"
+        font_size: 40
+        halign: 'center'
+        size_hint_y: None
+        pos_hint: {"center_x": 0.5, "center_y": 0.7}
+        height: self.texture_size[0]
+        padding_y: 15
+
+    MDTextFieldRound:
+        id: user
+        hint_text: "username"
+        icon_right: "account"
+        size_hint_x: None
+        width: 200
+        font_size: 18
+        pos_hint: {"center_x": 0.5, "center_y": 0.6}
+        
+    MDTextFieldRound:
+        id: password
+        hint_text: "password"
+        icon_right: "eye-off"
+        size_hint_x: None
+        width: 200
+        font_size: 18
+        pos_hint: {"center_x": 0.5,"center_y": 0.5}
+        password: True
+        
+    MDRoundFlatButton:
+        text: "LOG IN"
+        font_size: 12
+        pos_hint: {"center_x": 0.5,"center_y": 0.4}
+        on_press: app.root.logger()
+        
+    #MDRoundFlatButton:
+        #text: "clear"
+        #font_size: 12
+        #pos_hint: {"right": 0.5}
+        #on_press: app.clear()
+        
+    MDFlatButton:
+        text: "Forgot Password ?"
+        font_size: 12
+        pos_hint: {"center_x": 0.5,"center_y": 0.3}
+
+    MDIconButton:
+        pos_hint: {"center_x": 0.9, "center_y": 0.9}
+        md_bg_color: app.theme_cls.accent_dark
+        icon: 'home'
+        on_press:
+            app.root.current = "homepage"
+            root.manager.transition.direction ="left"
+    
 
 <SelectionPage>:
     
@@ -87,6 +159,13 @@ PageManager:
                 root.viewcoursecatalog()
                 app.root.current = "catalogpage"
                 root.manager.transition.direction ="left"
+    MDIconButton:
+        pos_hint: {"center_x": 0.9, "center_y": 0.9}
+        md_bg_color: app.theme_cls.accent_dark
+        icon: 'home'
+        on_press:
+            app.root.current = "homepage"
+            root.manager.transition.direction ="left"
 
 <Content>:
     adaptive_height: True

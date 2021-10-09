@@ -12,6 +12,11 @@ from kivymd.uix.boxlayout import MDBoxLayout
 class HomePage(MDScreen):
     pass
 
+class LoginPage(MDScreen):
+
+    pass
+
+
 class SelectionPage(MDScreen):
     #make sure the d1 and p1 have values as in the database entry
     d1 = ObjectProperty(None)
@@ -22,17 +27,19 @@ class SelectionPage(MDScreen):
         
 class Content(MDBoxLayout):
     pass
+
 class CourseCatalogPage(MDScreen):
     displaycatalog=ObjectProperty(None)
-    deaprtment=''
+    department=''
     program=''
     def on_enter(self, *args):
         # get the value of ids from screen 1 to screen2
-        self.deaprtment= self.manager.get_screen('selectionpage').d1.text
+        self.department= self.manager.get_screen('selectionpage').d1.text
         self.program = self.manager.get_screen('selectionpage').p1.text
-        print(self.deaprtment)        
+        print(self.department)        
 
 class PageManager(ScreenManager):
+    
     pass
 
 class TitanEnrolHelper(MDApp):
@@ -40,6 +47,9 @@ class TitanEnrolHelper(MDApp):
     def __init__(self,**kwargs):
         super(TitanEnrolHelper,self).__init__(**kwargs)
         self.root= Builder.load_file('pagescreen.kv')
+        
+    def logger(self):
+        self.root.ids.CSU_Login.text = f'Hi {self.root.ids.user.text}!'
 
     def build(self):
         self.theme_cls.theme_style = "Dark"
