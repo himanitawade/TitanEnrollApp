@@ -21,12 +21,19 @@ class LoginPage(MDScreen):
 
 
 class SelectionPage(MDScreen):
-    #make sure the d1 and p1 have values as in the database entry
-    d1 = ObjectProperty(None)
-    p1= ObjectProperty(None)
-    def viewcoursecatalog(self):
-        print('Button has pressed')
-      
+   
+    spinner_dept = ObjectProperty()
+    spinner_prog = ObjectProperty()
+    
+    
+    def spinner_clicked(self,value):
+        print(value)
+        print(self.manager.get_screen('selectionpage').spinner_dept.text )
+    def spinner_clicked_prog(self,value):
+        print(value)
+        print(self.manager.get_screen('selectionpage').spinner_prog.text )
+    
+    
 class content2(BoxLayout):
     coursedesc=ObjectProperty(None)
     courseunit=ObjectProperty(None)
@@ -43,8 +50,19 @@ class CourseCatalogPage(MDScreen):
         # get the value of ids from screen 1 to screen2
        # print('((((',self.manager.get_screen('selectionpage').p1.text)
     
-        self.deaprtment= self.manager.get_screen('selectionpage').d1.text
-        self.program = self.manager.get_screen('selectionpage').p1.text
+        self.deaprtment= self.manager.get_screen('selectionpage').spinner_dept.text
+        self.program = self.manager.get_screen('selectionpage').spinner_prog.text
+        print("inside course catalog",self.deaprtment)
+        print("inside course catalog",self.program)
+        ##adjusting department and program selection values for database query
+        
+        if(self.deaprtment == "computer science"):
+            self.deaprtment = "Computer Science"
+        if(self.program == "Master" ):
+            self.program = "Master in Computer Science"
+        elif (self.program == "Bachelor" ):
+            self.program = "Bachelor in Computer Science"
+            
         self.manager.get_screen('catalogpage').selectedeptandprogram.text=f'Course Catalog For \n Department: {self.deaprtment} \nProgram: {self.program}'
         
         #call the database query function
@@ -120,4 +138,3 @@ if __name__ == '__main__':
 #without command line in IDE
 TitanEnrolHelper().run()
 ###################################################
-
