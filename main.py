@@ -11,6 +11,14 @@ from kivymd.uix.expansionpanel import MDExpansionPanel,MDExpansionPanelTwoLine
 from kivymd.uix.list import TwoLineListItem,OneLineListItem
 from kivy.uix.boxlayout import BoxLayout
 from kivy.core.window import Window
+from kivymd.uix.datatables import MDDataTable
+from kivy.metrics import dp
+from databaseconnection import getlistofavailablecourses
+from databaseconnection import getlistofregisteredcourses
+from kivymd.uix.gridlayout import GridLayout
+from kivy.uix.button import Button
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.button import MDRectangleFlatButton, MDFlatButton
 
 class HomePage(MDScreen):
     pass
@@ -19,6 +27,93 @@ class LoginPage(MDScreen):
 
     pass
 
+class EnrollmentPage(MDScreen):
+    availablecourseslist=ObjectProperty(None)
+
+    def getRowData(self, dbList): 
+        data = []
+		#append each row of data fetched from db into an array
+        for i in dbList:
+            data.append(i)
+            #print(data)
+        return data
+    def getStudentCourses(self,courses):
+        list=[]
+        for i in courses:
+            list.append(i)
+            print(i)
+        return list        
+
+    def checked(self, instance_table, instance_row):
+		#get the dblist
+        dbList = self.getRowData(getlistofavailablecourses('Computer Science', 'Master in Computer Science'))
+        if(instance_row.index/6>=0):
+			#get the selecetd row value
+            dialog = MDDialog(title='Username check',
+                               text="user_error",
+                               size_hint=(0.8, 1),
+                               buttons=[MDFlatButton(text='Close')]
+                               )
+            #self.dialog.open()
+    
+            self.manager.get_screen('enrollmentpage').availablecourseslist.add_widget(dialog)         
+            print(dbList[int(instance_row.index/6)])    
+
+    def on_enter(self, *args):
+        layout = GridLayout(rows=2)
+        dbList = getlistofavailablecourses('Computer Science', 'Master in Computer Science')
+        registeredcourses = getlistofregisteredcourses(80000000) # student ID
+        if not registeredcourses:
+            print('not yet registered')
+            layout.add_widget(Text="Not yet registered")
+        else:
+            registeredtable = MDDataTable(
+                pos_hint={'center_x': 100, 'center_y': 0.5},#position
+                size_hint=(0.9, 0.6),						#size
+                use_pagination=True,						#pagination
+                rows_num=3,									#initial no for pagination
+                pagination_menu_height='240dp',				#menu height for pagination
+                pagination_menu_pos="auto",					#menu position
+                background_color=[1, 0, 0, .5],				#backgnd color
+                #define column data
+                column_data=[
+                    ("Course Name", dp(30)),
+                    ("Professor Name", dp(30)),
+                    ("Timeslot", dp(30)),
+                    ("ClassID",dp(30)),
+                    ("Unit",dp(30))
+                ],
+                #define row data
+                row_data=self.getStudentCourses(registeredcourses)
+            )  
+            table= MDDataTable(
+                pos_hint={'center_x': 0.5, 'center_y': 0.5},#position
+                size_hint=(0.9, 0.6),						#size
+                use_pagination=True,						#pagination
+                rows_num=3,									#initial no for pagination
+                pagination_menu_height='240dp',				#menu height for pagination
+                pagination_menu_pos="auto",					#menu position
+                background_color=[1, 0, 0, .5],				#backgnd color
+                #define column data
+                column_data=[
+                    ("ClassId", dp(30)),
+                    ("CourseID", dp(30)),
+                    ("Course Name", dp(30)),
+                    ("Prefessor Name", dp(30)),
+                    ("Timeslot", dp(30)),
+                    ("Remaining Slots", dp(30)),
+                    ("Units",dp(30))
+                ],
+                #define row data
+                row_data=self.getRowData(dbList)
+            )
+
+            table.bind(on_row_press=self.checked)  
+            layout.add_widget(registeredtable)
+            layout.add_widget(table) 
+
+        self.manager.get_screen('enrollmentpage').availablecourseslist.add_widget(layout) 
+                                                      
 
 class SelectionPage(MDScreen):
    
