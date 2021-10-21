@@ -6,7 +6,7 @@ import pyodbc as connector
 #connection string with needed information
 """ The server name will be differ for all partners"""
 connection_string=(r"Driver={SQL Server};"
-               r"Server=LTCSUF-24KH0B3\SQLEXPRESS;" # please change this to your server--> run 'select @@SERVERNAME' in sql studio to find your server
+               r"Server=LAPTOP-UETA6VBJ\CPSC544KAVI;" # please change this to your server--> run 'select @@SERVERNAME' in sql studio to find your server
                r"Database=TITANENROLLDB;"
                r"Trusted_Connection=yes;")
 
@@ -17,32 +17,23 @@ conn= connector.connect(connection_string)
 cur=conn.cursor()
 
 def getlistofavailablecourses(department,program):
+   # connection_string=(r"Driver={SQL Server};"
+   #             r"Server=DELL-K2QI68SB10\NIDHI544APP;"
+   #             r"Database=TITANENROLLDB;"
+   #             r"Trusted_Connection=yes;")
+
+   # conn= connector.connect(connection_string)
+
+   # cur=conn.cursor()
+   
   # query will get all available courses
-   cur.execute(f"""SELECT Classes.ClassID,Courses.CourseID,Courses.CoursesName,Professor.firstname+Professor.lastname,Classes.Timeslot,Classes.RemainingSeats,Courses.Unit FROM Courses 
+   cur.execute(f"""SELECT Classes.ClassID,Courses.CourseID,Courses.CoursesName,Professor.firstname+Professor.lastname,Classes.Timeslot,Classes.RemainingSeats FROM Courses 
                   INNER JOIN Classes 
                      ON Courses.CourseID = Classes.CourseID 
 					 INNER JOIN Professor
 					 ON Classes.ProfessorID = Professor.ProfessorID""")
-   
-   availabledata=[]             
-   for i in cur:
-      availabledata.append(i)
-   return availabledata
 
-def getlistofregisteredcourses(studentId):
-  # query will get all available courses
-   cur.execute(f"""SELECT Courses.CoursesName,Professor.firstname+Professor.lastname,Classes.Timeslot,Classes.ClassID,Courses.Unit FROM Courses 
-                  INNER JOIN Classes 
-                  ON Courses.CourseID = Classes.CourseID
-                  INNER JOIN classStudentList 
-                  ON classStudentList.classID = Classes.ClassID
-                  INNER JOIN Professor
-                  ON Classes.ProfessorID = Professor.ProfessorID""")
-   
-   registeredclasses=[]             
-   for i in cur:
-      registeredclasses.append(i)
-   return registeredclasses
+   return cur
 
 def getlistofcourses(department,program):
    print('server function call')
@@ -75,3 +66,16 @@ def getlistofcourses(department,program):
    #print(courselist)
    
    return courselist
+### To authenticate user credentials
+def authenticateUser(username,password):
+      if username=="" or password=="":
+         return False
+      else:
+         cur.execute(f"""SELECT dbo.Student FROM TITANENROLLDB WHERE username='{username}' AND upassword='{password}'""")
+         student=[]
+         for i in cur:
+            student.append(i)
+            if not student:
+               return False
+            else:
+               return True
