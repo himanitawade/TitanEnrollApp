@@ -75,17 +75,18 @@ def getlistofcourses(department,program):
    #print(courselist)
    
    return courselist
-   
+
 ### To authenticate user credentials
 def authenticateUser(username,password):
       if username=="" or password=="":
          return False
       else:
-         cur.execute(f"""SELECT dbo.Student FROM TITANENROLLDB WHERE username='{username}' AND upassword='{password}'""")
+         cur.execute(f"""SELECT Student.StudentID FROM Student WHERE username='{username}' AND upassword='{password}'""")
          student=[]
          for i in cur:
             student.append(i)
+            print(student[0][0])
             if not student:
                return False
             else:
-               return True
+               return student[0]
