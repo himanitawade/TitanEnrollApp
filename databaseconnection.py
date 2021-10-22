@@ -85,8 +85,69 @@ def authenticateUser(username,password):
          student=[]
          for i in cur:
             student.append(i)
-            print(student[0][0])
             if not student:
                return False
             else:
                return student[0]
+
+##########################################################################
+### function for class registration (enrollment) #################
+   # This function will take input of classid and and studentid
+   # First: It will check the class have available seats or not. 
+   # If there is available seat, then it will update with one addition of enrollment.
+   # After fixing that, It will update the classstudentlist with studentid and classid
+
+def classenrollment(studentid,classid):
+   
+   capacity=0
+   remaining=0
+   enrolled=0
+   state=""
+   # query to get current remaining seats with class capacity
+   cur.execute(f"""SELECT Classes.classCapacity,Classes.RemainingSeats,Classes.Enrolled,Classes.Status FROM Classes Where Classes.ClassID={classid}""")
+
+   # getting the remaining and class capacity data into variable
+   for data in cur:
+      capacity=data[0]
+      print('capacity',capacity)
+      remaining=data[1]
+      print('remaining',remaining)
+      enrolled=data[2]
+      print('enrolled',enrolled)
+      state=data[3]
+      print('state',state)
+
+
+      #print('remaining',remaining)
+   
+   # If the remaining seats are less than classcapasity, then enroll student and update the database
+   #else send a message that class is fully enrolled, cannot enroll in this class.
+   if (remaining < capacity) and (state=="Open"):
+      print("HAPPENING")
+      remaining = remaining - 1
+      print('new remaining',remaining)
+      enrolled= enrolled + 1
+      print('new enrolled',enrolled)
+      #Before doing update - check the enrolled and capacity is equal or not to change class status
+      if enrolled == capacity:
+         state="Close"
+     
+      try:
+         # Query to insert student record with enrolled class.
+         cur.execute(f""" INSERT INTO classStudentList VALUES ({classid},{studentid})""")
+         # Query to update that class information that neeeded for enrollment functionality
+         cur.execute(f"""UPDATE Classes SET Classes.RemainingSeats={remaining}, Classes.Enrolled={enrolled},Classes.Status='{state}' Where Classes.ClassID={classid} """)
+         #cur.commit()
+      except Exception as e:
+         # print(e.args[0])
+         # print(type(e.args[0]))
+         #if the exception is the duplciate entry in classStudentList - means student is trying to enroll in class which is already enrolled by that student
+         if(e.args[0]== '23000'):
+            print(" You are trying to enroll the class in which you are already enrolled.")
+            return f' You are trying to enroll the class in which you are already enrolled.'
+      else:
+         cur.commit()
+         #cur.close()
+      return f"Successfully Enrolled"
+   elif (enrolled==capacity) and (state=="Close"):
+      return f"You cannot enroll this class because it is already Fully Enrolled."
