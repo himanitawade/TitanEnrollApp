@@ -20,13 +20,32 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDRectangleFlatButton, MDFlatButton
+from kivymd.uix.dialog import MDDialog
+from databaseconnection import authenticateUser
 
 class HomePage(MDScreen):
     pass
 
 class LoginPage(MDScreen):
-
-    pass
+    dialog = None
+    
+    def ShowLoginErrorMessage(self):
+        if not self.dialog:
+            self.dialog = MDDialog(
+                text = "Invalid Username/Password",
+                #size_hint=(.8, None),
+                #height=dp(200),
+            )
+        self.dialog.open()  
+        
+    def Login(self,username,password):
+        if authenticateUser(username,password) == True:
+            self.manager.current = "enrollmentpage"
+        else:
+            self.ShowLoginErrorMessage()
+            
+       
+          
 
 class EnrollmentPage(MDScreen):
     availablecourseslist=ObjectProperty(None)
@@ -66,6 +85,7 @@ class EnrollmentPage(MDScreen):
         layout = GridLayout(rows=4)
         dbList = getlistofavailablecourses('Computer Science', 'Master in Computer Science')
         registeredcourses = getlistofregisteredcourses(80000000) # student ID
+        #registeredcourses = []
         if not registeredcourses:
             print('not yet registered')
             layout.add_widget(Label(text="Not yet registered"))
