@@ -1,0 +1,298 @@
+##########################################3
+PageManager:
+    
+    HomePage:
+    LoginPage:
+    SelectionPage:
+    CourseCatalogPage:
+    EnrollmentPage:
+    
+<HomePage>:
+    name:"homepage"
+    home:home
+    MDCard:
+        size_hint: None, None
+        size: 400, 500
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+        
+    
+    MDLabel:
+        id: home
+        text: "Welcome to CS Course Info and Enrollment App"
+        font_size: 15
+        halign: 'center'
+        size_hint_y: None
+        pos_hint: {"center_x": 0.5, "center_y": 0.7}
+        height: self.texture_size[1]
+        padding_y: 15
+        
+    
+    MDFillRoundFlatIconButton:
+        text: "View Course Catalog"
+        font_size: 12
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        md_bg_color: app.theme_cls.accent_dark
+        icon:'book'
+        on_press:
+            app.root.current = "selectionpage"
+            root.manager.transition.direction ="left"
+        
+        
+    MDFillRoundFlatIconButton:
+        text: "Enrollment"
+        font_size: 12
+        pos_hint: {"center_x": 0.5, "center_y": 0.3}
+        md_bg_color: app.theme_cls.primary_dark
+        icon: 'lock-outline'
+        on_press:
+            app.root.current = "loginpage"
+            root.manager.transition.direction ="left"
+              
+    Image:
+        source:'Images/Logo.png'
+        size_hint_x: 0.2
+        allow_stretch: True
+        pos_hint: {"center_x": 0.1, "center_y": 0.9}
+        
+<LoginPage>:
+
+    name:"loginpage"
+        
+    MDCard:
+        size_hint: None,None
+        size: 300,420
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+
+    MDLabel:
+        id: CSU_Login
+        text: "CSU Login"
+        font_size: 40
+        halign: 'center'
+        size_hint_y: None
+        pos_hint: {"center_x": 0.5, "center_y": 0.7}
+        height: self.texture_size[0]
+        padding_y: 15
+
+    MDTextFieldRound:
+        id: user
+        hint_text: "username"
+        icon_right: "account"
+        size_hint_x: None
+        width: 200
+        font_size: 18
+        pos_hint: {"center_x": 0.5, "center_y": 0.6}
+        
+    MDTextFieldRound:
+        id: password
+        hint_text: "password"
+        icon_right: "eye-off"
+        size_hint_x: None
+        width: 200
+        font_size: 18
+        pos_hint: {"center_x": 0.5,"center_y": 0.5}
+        password: True
+        
+    MDRoundFlatButton:
+        text: "LOG IN"
+        font_size: 12
+        pos_hint: {"center_x": 0.5,"center_y": 0.4}
+        on_press: root.Login(root.ids.user.text, root.ids.password.text)
+
+    MDIconButton:
+        pos_hint: {"center_x": 0.9, "center_y": 0.9}
+        md_bg_color: app.theme_cls.accent_dark
+        icon: 'home'
+        on_press:            
+            app.root.current = "homepage"
+            root.manager.transition.direction ="left"
+    
+
+<SelectionPage>:
+    
+    name:"selectionpage"
+    spinner_dept:spinner_dept
+    spinner_prog:spinner_prog
+    MDCard:
+        size_hint: None, None
+        size: 400, 500
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+        
+    
+    MDLabel:
+        id: w1
+        text: "Department and Program Selection"
+        font_size: 15
+        halign: 'center'
+        size_hint_y: None
+        pos_hint: {"center_x": 0.5, "center_y": 0.8}
+        
+        padding_y: 15
+
+
+
+    Spinner:
+        id: spinner_dept
+        text: "Select Department"
+        values:["computer science"]
+        pos_hint: {"center_x": 0.5, "center_y": 0.6}
+        size_hint:(None,None)
+        size: (280, 55)
+        
+        on_text: root.spinner_clicked(spinner_dept.text) 
+        
+    Spinner:
+        id: spinner_prog
+        text: "Select Program"
+        values:["Master","Bachelor"]
+        pos_hint: {"center_x": 0.5, "center_y": 0.4}
+        size_hint:(None,None)
+        size: (280, 55)
+        
+        on_text: root.spinner_clicked_prog(spinner_prog.text)    
+
+
+
+
+    MDFillRoundFlatIconButton:
+        text: "Show Course Catalog"
+        font_size: 12
+        pos_hint: {"center_x": 0.5, "center_y": 0.2}
+        md_bg_color: app.theme_cls.accent_dark
+        icon:'school'
+        on_press:
+            app.root.current = "catalogpage"
+            root.manager.transition.direction ="left"
+            
+    MDIconButton:
+        pos_hint: {"center_x": 0.9, "center_y": 0.9}
+        md_bg_color: app.theme_cls.accent_dark
+        icon: 'home'
+        on_press:
+            app.root.current = "homepage"
+            root.manager.transition.direction ="left"
+
+# content is for Course Catalog Page##################
+<Content2>:
+    orientation:'vertical'
+    size_hint: 1, None
+    height:150
+    coursedesc:coursedesc
+    courseunit:courseunit
+
+    MDBoxLayout:
+        size_hint:(1,None)
+        height: 400
+        #### to show the course description and unit
+        MDCard:
+            orientation: "vertical"
+            padding: "8dp"
+            size_hint: (1,None)
+            height:160
+            border_radius:10
+            radius:[14]
+
+            # ###for course-unit label
+            MDLabel:
+                id: courseunit
+                text: "title"
+                font_style:'H6'
+                size_hint_y: None
+                height: 30
+
+            MDSeparator:
+                height: "3dp"
+
+            MDLabel:
+                id:coursedesc
+                text: "Multi\nLine"
+                font_size:14
+
+<CourseCatalogPage>:
+    #Main Layout
+    name:'catalogpage'
+    displaycatalog:displaycatalog
+    selectedeptandprogram:selectedeptandprogram
+    
+    MDBoxLayout:
+        orientation:'vertical'
+        size: root.width,root.height
+        spacing:7
+        # Inside Main layout.. Top bar
+        MDCard:
+            size_hint_y:None
+            height:root.height/10
+            MDLabel:
+                id:selectedeptandprogram
+                text:"Course Catalog For \n Department: \nProgram:"
+                text_style:'H5'
+                background_color: (0,0,0.3,0.3)
+                canvas.before:
+                    Color:
+                        rgba: self.background_color
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                halign:"center"
+        # Layout to show the courses
+        MDBoxLayout:
+            orientation:'vertical'
+            background_color: (0,0,0.3,0.1)
+            
+            
+            #height:root.height/10
+            canvas.before:
+                Color:
+                    rgba: self.background_color
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            
+            ScrollView:
+                bar_width:12
+                MDGridLayout:
+                    id:displaycatalog
+                    cols:1
+                    #size:(400,200)
+                    #size_hint_x:1
+                    size_hint_y:None
+                    height:self.minimum_height
+                    #height:300
+                    padding:'20dp'
+
+                                      
+        MDFillRoundFlatIconButton:
+            text: "back to selection"
+            md_bg_color: app.theme_cls.accent_dark
+            font_size: "18sp"
+            pos_hint:{"center_x": .5, "center_y": .2}
+            icon:'school'
+            on_press:
+                root.Gobacktoselectionwork()
+                app.root.current = "selectionpage"
+                root.manager.transition.direction ="left"
+
+<EnrollmentPage>:
+    name:"enrollmentpage"
+    availablecourseslist: availablecourseslist
+    #registeredcourseslist: registeredcourseslist
+
+    MDGridLayout:
+        id:availablecourseslist
+        cols:1
+        #size_hint_x:None
+        size_hint_y:None
+        height:400
+        top: 600
+        padding:'20dp'      
