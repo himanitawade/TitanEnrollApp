@@ -30,14 +30,17 @@ def getlistofavailablecourses(department,program):
    return availabledata
 
 def getlistofregisteredcourses(studentId):
+   print(studentId)
   # query will get all available courses
-   cur.execute(f"""SELECT Courses.CoursesName,Professor.firstname+Professor.lastname,Classes.Timeslot,Classes.ClassID,Courses.Unit FROM Courses 
-                  INNER JOIN Classes 
-                  ON Courses.CourseID = Classes.CourseID
-                  INNER JOIN classStudentList 
-                  ON classStudentList.classID = Classes.ClassID
-                  INNER JOIN Professor
-                  ON Classes.ProfessorID = Professor.ProfessorID""")
+   cur.execute(f"""SELECT Courses.CoursesName,Professor.firstname+Professor.lastname,Classes.Timeslot,Classes.ClassID,Courses.Unit FROM classStudentList 
+                  JOIN Classes 
+                  ON classStudentList.classID = Classes.ClassID 
+                  JOIN Courses
+                  ON Courses.CourseID = Classes.CourseID 
+                  JOIN Professor
+                  ON Classes.ProfessorID = Professor.ProfessorID
+                  Where classStudentList.studentID='{studentId}'
+                  """)
    
    registeredclasses=[]             
    for i in cur:

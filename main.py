@@ -19,11 +19,11 @@ from kivymd.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivymd.uix.dialog import MDDialog
-from kivymd.uix.button import MDRectangleFlatButton, MDFlatButton
+from kivymd.uix.button import MDFlatButton,MDIconButton
 from databaseconnection import authenticateUser
 from databaseconnection import classenrollment
 
-studentId = 80000000
+studentID = ''
 
 class HomePage(MDScreen):
     pass
@@ -43,12 +43,13 @@ class LoginPage(MDScreen):
     def Login(self,username,password):
         self.studentId = authenticateUser(username,password)
         if self.studentId:
-            studentId = self.studentId
+            studentID = self.studentId
             self.manager.current = "enrollmentpage"
         else:
             self.ShowLoginErrorMessage()                    
 
 class EnrollmentPage(MDScreen):
+    Home = HomePage();
     dialog = None
     availablecourseslist=ObjectProperty(None)
 
@@ -57,8 +58,8 @@ class EnrollmentPage(MDScreen):
 		#append each row of data fetched from db into an array
         for i in dbList:
             data.append(i)
-            #print(data)
         return data
+        
     def getStudentCourses(self,courses):
         list=[]
         for i in courses:
@@ -68,16 +69,19 @@ class EnrollmentPage(MDScreen):
 
     def dialog_close(self, obj):
         self.dialog.dismiss()
+    
+    def navigateToHomePage(self,obj):
+        self.manager.current = 'homepage'
 
     def checked(self, instance_table, instance_row):
 		#get the dblist
-        print(studentId)
+        print(studentID)
         dbList = self.getRowData(getlistofavailablecourses('Computer Science', 'Master in Computer Science'))
         if(instance_row.index/6>=0):
             #Successfully Enrolled
             #You cannot enroll this class because it is already Fully Enrolled.
             # You are trying to enroll the class in which you are already enrolled.
-            enrollResult = classenrollment(studentId,dbList[int(instance_row.index/6)][0])
+            enrollResult = classenrollment(studentID,dbList[int(instance_row.index/6)][0])
             
             if not self.dialog:
                 self.dialog = MDDialog(
@@ -85,34 +89,29 @@ class EnrollmentPage(MDScreen):
                     buttons = [MDFlatButton(
                                     text="CLOSE",on_release=self.dialog_close
                                 )]
-                    #size_hint=(.8, None),
-                    #height=dp(200),
                 )
-                self.dialog.open() 
-			#get the selecetd row value
-            #dialog = MDDialog(title='Username check',
-            #                   text="user_error",
-            #                   size_hint=(0.8, 1),
-            #                   buttons=[MDFlatButton(text='Close', on_release=self.onclick)]
-            #                   )
-            #self.dialog.open()
-            #self.manager.get_screen('enrollmentpage').availablecourseslist.add_widget(dialog)         
-                print(enrollResult)    
+                self.dialog.open()     
 
     def on_enter(self, *args):
-        layout = GridLayout(rows=5)
+        layout = GridLayout(rows=5,row_default_height=24)
+        self.manager.get_screen('enrollmentpage').availablecourseslist.clear_widgets()
         dbList = getlistofavailablecourses('Computer Science', 'Master in Computer Science')
-        registeredcourses = getlistofregisteredcourses(studentId) # student ID
-        if not registeredcourses:
-            print('not yet registered')
-            layout.add_widget(Label(text="Not yet registered"))
-        else:
-            layout.add_widget(Label(text="Registered Courses"
+        registeredcourses = getlistofregisteredcourses(studentID) # student ID
+        layout.add_widget(MDIconButton(icon = 'home',md_bg_color='orange',
+                                        #size_hint =(40,.2),
+                                        on_release=self.navigateToHomePage,
+                                        pos_hint= {"center_x": .2, "center_y": .2}
+                                    ))
+        layout.add_widget(Label(text="Registered Courses"
             ,size_hint=(.8, 8)
                 ))
+        if not registeredcourses:
+            print('not yet registered')
+            layout.add_widget(Label(text="You are not yet registered into any course for this semester"))
+        else:
             registeredtable = MDDataTable(
                 pos_hint={'center_x': 100, 'center_y': 0.5},#position
-                size_hint=(5, 40),						#size
+                size_hint=(5, 40),						    #size
                 use_pagination=True,						#pagination
                 rows_num=3,									#initial no for pagination
                 pagination_menu_height='240dp',				#menu height for pagination
@@ -129,6 +128,11 @@ class EnrollmentPage(MDScreen):
                 #define row data
                 row_data=self.getStudentCourses(registeredcourses)
             )  
+            layout.add_widget(registeredtable)
+
+        if not dbList:
+            layout.add_widget(Label(text="Currently there are no available courses for this semester"))
+        else:    
             table= MDDataTable(
                 pos_hint={'center_x': 0.5, 'center_y': 0.5},#position
                 size_hint=(50, 40),						#size
@@ -152,9 +156,8 @@ class EnrollmentPage(MDScreen):
                 #define row data
                 row_data=self.getRowData(dbList)
             )
-
             table.bind(on_row_press=self.checked)  
-            layout.add_widget(registeredtable)
+
             layout.add_widget(Label(text="Available Courses"))
             layout.add_widget(table) 
 
@@ -165,7 +168,7 @@ class SelectionPage(MDScreen):
    
     spinner_dept = ObjectProperty()
     spinner_prog = ObjectProperty()
-    
+   
     
     def spinner_clicked(self,value):
         print(value)
