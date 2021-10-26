@@ -16,6 +16,7 @@ conn= connector.connect(connection_string)
 #create a cursor to work on the database
 cur=conn.cursor()
 
+# get the list of available courses
 def getlistofavailablecourses(department,program):
   # query will get all available courses
    cur.execute(f"""SELECT Classes.ClassID,Courses.CourseID,Courses.CoursesName,Professor.firstname+Professor.lastname,Classes.Timeslot,Classes.RemainingSeats,Courses.Unit FROM Courses 
@@ -29,6 +30,7 @@ def getlistofavailablecourses(department,program):
       availabledata.append(i)
    return availabledata
 
+# get the list of registered courses by a student
 def getlistofregisteredcourses(studentId):
    print(studentId)
   # query will get all available courses
@@ -47,6 +49,7 @@ def getlistofregisteredcourses(studentId):
       registeredclasses.append(i)
    return registeredclasses
 
+# gte list of courses by dept and prgm
 def getlistofcourses(department,program):
    print('server function call')
    # connection_string=(r"Driver={SQL Server};"
@@ -100,6 +103,7 @@ def authenticateUser(username,password):
    # If there is available seat, then it will update with one addition of enrollment.
    # After fixing that, It will update the classstudentlist with studentid and classid
 
+#enroll into a class based on selection and throw the error, if any
 def classenrollment(studentid,classid):
    
    capacity=0
@@ -119,9 +123,6 @@ def classenrollment(studentid,classid):
       print('enrolled',enrolled)
       state=data[3]
       print('state',state)
-
-
-      #print('remaining',remaining)
    
    # If the remaining seats are less than classcapasity, then enroll student and update the database
    #else send a message that class is fully enrolled, cannot enroll in this class.

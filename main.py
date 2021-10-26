@@ -20,9 +20,11 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton,MDIconButton
+from kivymd.uix.toolbar import MDToolbar
 from databaseconnection import authenticateUser
 from databaseconnection import classenrollment
 
+# store student id for enrollment page
 studentID = ''
 
 class HomePage(MDScreen):
@@ -48,31 +50,24 @@ class LoginPage(MDScreen):
         else:
             self.ShowLoginErrorMessage()                    
 
+#enrollment page data and functions
 class EnrollmentPage(MDScreen):
-    Home = HomePage();
-    dialog = None
-    availablecourseslist=ObjectProperty(None)
+    dialog = None #dialog to show when enrollment is completed
+    availablecourseslist=ObjectProperty(None) #id to track
 
+    #get rowdata for the tables
     def getRowData(self, dbList): 
         data = []
 		#append each row of data fetched from db into an array
         for i in dbList:
             data.append(i)
         return data
-        
-    def getStudentCourses(self,courses):
-        list=[]
-        for i in courses:
-            list.append(i)
-            print(i)
-        return list 
 
+    #close dialog when clicked on close button
     def dialog_close(self, obj):
         self.dialog.dismiss()
-    
-    def navigateToHomePage(self,obj):
-        self.manager.current = 'homepage'
 
+    #clicked on the row to enroll
     def checked(self, instance_table, instance_row):
 		#get the dblist
         print(studentID)
@@ -92,19 +87,18 @@ class EnrollmentPage(MDScreen):
                 )
                 self.dialog.open()     
 
+    #perform actions when entered
     def on_enter(self, *args):
-        layout = GridLayout(rows=5,row_default_height=24)
-        self.manager.get_screen('enrollmentpage').availablecourseslist.clear_widgets()
+        layout = GridLayout(rows=5,row_default_height=24) # create a layout
+        self.manager.get_screen('enrollmentpage').availablecourseslist.clear_widgets() #clear widgets
+        #get the db data
         dbList = getlistofavailablecourses('Computer Science', 'Master in Computer Science')
         registeredcourses = getlistofregisteredcourses(studentID) # student ID
-        layout.add_widget(MDIconButton(icon = 'home',md_bg_color='orange',
-                                        #size_hint =(40,.2),
-                                        on_release=self.navigateToHomePage,
-                                        pos_hint= {"center_x": .2, "center_y": .2}
-                                    ))
+        #add the headings
         layout.add_widget(Label(text="Registered Courses"
             ,size_hint=(.8, 8)
                 ))
+    
         if not registeredcourses:
             print('not yet registered')
             layout.add_widget(Label(text="You are not yet registered into any course for this semester"))
@@ -126,7 +120,7 @@ class EnrollmentPage(MDScreen):
                     ("Unit",dp(30))
                 ],
                 #define row data
-                row_data=self.getStudentCourses(registeredcourses)
+                row_data=self.getRowData(registeredcourses)
             )  
             layout.add_widget(registeredtable)
 
