@@ -1,5 +1,8 @@
 # TitanEnrollApp
 
+### Course Catalog
+  Students will be able to view the list of courses in the semester.
+  
 ### View Registered Classes:
   Students will be able to view the registered classes.
   Note:
